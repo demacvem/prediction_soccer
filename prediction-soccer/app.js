@@ -5,7 +5,9 @@ const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const app = express();
+
 const userRoutes = require('./server/routes/users');
+const statusRoutes = require('./server/routes/status');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -21,6 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/users', userRoutes);
+app.use('/status', statusRoutes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
