@@ -1,31 +1,16 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const Status = require('../models/status');
+const _Date = require('../models/date');
 
 exports.getAll = (req, res, next) => {
-    Status.find({})
+    _Date.find()
+        .populate("tournament" ,"name")
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                status: results
-            });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: `Ha ocurrido un error: ${err}`
-            });
-        });
-}
-
-exports.getActives = (req, res, next) => {
-    Status.find({ isActive: true })
-        .exec()
-        .then(results => {
-            res.status(200).json({
-                total: results.length,
-                status: results
+                dates: results
             });
         })
         .catch(err => {
@@ -37,8 +22,9 @@ exports.getActives = (req, res, next) => {
 
 exports.getById = (req, res, next) => {
     let id = req.params.id;
-    Status
+    _Date
         .findById(id)
+        .populate("tournament" ,"name")
         .exec()
         .then(result => {
             if(!result){
@@ -46,7 +32,7 @@ exports.getById = (req, res, next) => {
             }
 
             res.status(200).json({
-                status: result
+                date: result
             });
         })
         .catch(err => {
@@ -57,22 +43,23 @@ exports.getById = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-    const status = new Status({
+    const date = new _Date({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        isActive: req.body.isActive
+        tournament: req.body.tournament
     });
-    status.save()
+
+    date.save()
         .then(result => {
             res.status(201).json({
-                message: "Created status successfully",
-                createdStatus: {
+                message: "Created dates successfully",
+                createdLeagues: {
                     _id: result._id,
                     name: result.name,
-                    isActive: result.isActive,
+                    tournament: result.tournament,
                     request: {
                         type: "GET",
-                        url: "http://localhost:3000/status/" + result._id
+                        url: "http://localhost:3000/dates/" + result._id
                     }
                 }
             });
@@ -86,11 +73,14 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     let id = req.params.id;
-    let model = req.body;
-    Status.update({ _id: id }, model)
+    let model = {
+        name: req.body.name,
+        tournament: req.body.tournament
+    };
+    _Date.update({ _id: id }, model)
         .then(result => {
             res.status(200).json({
-                message: "Updated status successfully"
+                message: "Updated dates successfully"
             });
         })
         .catch(err => {
@@ -102,15 +92,15 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    Status.remove({ _id: id })
+    _Date.remove({ _id: id })
       .exec()
       .then(result => {
         res.status(200).json({
-          message: "Status deleted",
+          message: "Date deleted",
           request: {
             type: "POST",
-            url: "http://localhost:3000/status",
-            body: { name: "String", isActive: "Boolean" }
+            url: "http://localhost:3000/tournaments",
+            body: { name: "String", logoImage: "String", order: "Number", isActive: "Boolean" }
           }
         });
       })

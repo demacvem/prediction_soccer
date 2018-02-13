@@ -1,15 +1,16 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const Status = require('../models/status');
+const Tournament = require('../models/tournament');
+const _Date = require('../models/date');
 
 exports.getAll = (req, res, next) => {
-    Status.find({})
+    Tournament.find()
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                status: results
+                tournaments: results
             });
         })
         .catch(err => {
@@ -20,12 +21,30 @@ exports.getAll = (req, res, next) => {
 }
 
 exports.getActives = (req, res, next) => {
-    Status.find({ isActive: true })
+    Tournament.find({ isActive: true })
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                status: results
+                tournaments: results
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: `Ha ocurrido un error: ${err}`
+            });
+        });
+}
+
+exports.getDatesByTournament = (req, res, next) => {
+    let tournamentId = req.params.id;
+    _Date.find({ tournament: tournamentId })
+        .populate("tournament", "name")
+        .exec()
+        .then(results => {
+            res.status(200).json({
+                total: results.length,
+                dates: results
             });
         })
         .catch(err => {
@@ -37,7 +56,7 @@ exports.getActives = (req, res, next) => {
 
 exports.getById = (req, res, next) => {
     let id = req.params.id;
-    Status
+    Tournament
         .findById(id)
         .exec()
         .then(result => {
@@ -46,7 +65,7 @@ exports.getById = (req, res, next) => {
             }
 
             res.status(200).json({
-                status: result
+                tournament: result
             });
         })
         .catch(err => {
@@ -57,22 +76,27 @@ exports.getById = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-    const status = new Status({
+    const tournament = new Tournament({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
+        logo: req.file.path,
+        order: req.body.order,
         isActive: req.body.isActive
     });
-    status.save()
+
+    tournament.save()
         .then(result => {
             res.status(201).json({
-                message: "Created status successfully",
-                createdStatus: {
+                message: "Created tournament successfully",
+                createdLeagues: {
                     _id: result._id,
                     name: result.name,
+                    logo: result.logo,
+                    order: result.order,
                     isActive: result.isActive,
                     request: {
                         type: "GET",
-                        url: "http://localhost:3000/status/" + result._id
+                        url: "http://localhost:3000/tournaments/" + result._id
                     }
                 }
             });
@@ -86,11 +110,17 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     let id = req.params.id;
-    let model = req.body;
-    Status.update({ _id: id }, model)
+    let model = {
+        name: req.body.name,
+        logo: req.file.path,
+        order: req.body.order,
+        isActive: req.body.isActive,
+        updatedAt: Date.now()
+    };
+    Tournament.update({ _id: id }, model)
         .then(result => {
             res.status(200).json({
-                message: "Updated status successfully"
+                message: "Updated tournaments successfully"
             });
         })
         .catch(err => {
@@ -102,15 +132,15 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    Status.remove({ _id: id })
+    Tournament.remove({ _id: id })
       .exec()
       .then(result => {
         res.status(200).json({
-          message: "Status deleted",
+          message: "Tournament deleted",
           request: {
             type: "POST",
-            url: "http://localhost:3000/status",
-            body: { name: "String", isActive: "Boolean" }
+            url: "http://localhost:3000/tournaments",
+            body: { name: "String", logoImage: "String", order: "Number", isActive: "Boolean" }
           }
         });
       })

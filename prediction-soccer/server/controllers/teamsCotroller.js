@@ -1,31 +1,17 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const Status = require('../models/status');
+const Team = require('../models/team');
 
 exports.getAll = (req, res, next) => {
-    Status.find({})
+    Team.find()
+        .select("_id name initials league")
+        .populate("league", "name")
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                status: results
-            });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: `Ha ocurrido un error: ${err}`
-            });
-        });
-}
-
-exports.getActives = (req, res, next) => {
-    Status.find({ isActive: true })
-        .exec()
-        .then(results => {
-            res.status(200).json({
-                total: results.length,
-                status: results
+                teams: results
             });
         })
         .catch(err => {
@@ -37,8 +23,9 @@ exports.getActives = (req, res, next) => {
 
 exports.getById = (req, res, next) => {
     let id = req.params.id;
-    Status
+    Team
         .findById(id)
+        .populate("league", "name")
         .exec()
         .then(result => {
             if(!result){
@@ -46,7 +33,7 @@ exports.getById = (req, res, next) => {
             }
 
             res.status(200).json({
-                status: result
+                team: result
             });
         })
         .catch(err => {
@@ -57,22 +44,27 @@ exports.getById = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-    const status = new Status({
+    const team = new Team({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        isActive: req.body.isActive
+        logo: req.file.path,
+        initials: req.body.initials,
+        league: req.body.league
     });
-    status.save()
+
+    team.save()
         .then(result => {
             res.status(201).json({
-                message: "Created status successfully",
-                createdStatus: {
+                message: "Created teams successfully",
+                createdLeagues: {
                     _id: result._id,
                     name: result.name,
-                    isActive: result.isActive,
+                    logo: result.logo,
+                    initials: result.initials,
+                    league: result.league,
                     request: {
                         type: "GET",
-                        url: "http://localhost:3000/status/" + result._id
+                        url: "http://localhost:3000/teams/" + result._id
                     }
                 }
             });
@@ -86,11 +78,16 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     let id = req.params.id;
-    let model = req.body;
-    Status.update({ _id: id }, model)
+    let model = {
+        name: req.body.name,
+        logo: req.file.path,
+        initials: req.body.initials,
+        league: req.body.league
+    };
+    Team.update({ _id: id }, model)
         .then(result => {
             res.status(200).json({
-                message: "Updated status successfully"
+                message: "Updated teams successfully"
             });
         })
         .catch(err => {
@@ -102,15 +99,15 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    Status.remove({ _id: id })
+    Team.remove({ _id: id })
       .exec()
       .then(result => {
         res.status(200).json({
-          message: "Status deleted",
+          message: "Team deleted",
           request: {
             type: "POST",
-            url: "http://localhost:3000/status",
-            body: { name: "String", isActive: "Boolean" }
+            url: "http://localhost:3000/teams",
+            body: { name: "String", logoImage: "String", initials: "String", league: "String" }
           }
         });
       })

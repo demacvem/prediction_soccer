@@ -8,6 +8,10 @@ const app = express();
 
 const userRoutes = require('./server/routes/users');
 const statusRoutes = require('./server/routes/status');
+const leaguesRoutes = require('./server/routes/leagues');
+const teamsRoutes = require('./server/routes/teams');
+const tournamentsRoutes = require('./server/routes/tournaments');
+const datesRoutes = require('./server/routes/dates');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -22,8 +26,13 @@ app.use((req, res, next) => {
     next();
 });
 
+// Routes app
 app.use('/users', userRoutes);
 app.use('/status', statusRoutes);
+app.use('/leagues', leaguesRoutes);
+app.use('/teams', teamsRoutes);
+app.use('/tournaments', tournamentsRoutes);
+app.use('/dates', datesRoutes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
