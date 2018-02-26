@@ -1,0 +1,66 @@
+<!-- Page-Title -->
+<!-- <div class="row">
+  <div class="col-sm-12">
+    <div class="page-title-box">
+      <div class="btn-group pull-right">
+        <ol class="breadcrumb hide-phone p-0 m-0">
+          <li class="breadcrumb-item">
+            <a href="#">PredicctionSoccer</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="#">Configuración</a>
+          </li>
+          <li class="breadcrumb-item active">Estados</li>
+        </ol>
+      </div>
+      <h4 class="page-title">Estados</h4>
+    </div>
+  </div>
+</div> -->
+
+<div class="row space-bottom">
+  <div class="col-md-3">
+    <a class="btn btn-primary waves-light waves-effect w-md btn-xs" [routerLink]="['./editor']">Crear Nuevo</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card-box">
+      <h4 class="m-t-0 header-title">Estados</h4>
+      <div class="table-responsive">
+        <table class="table table-hover table-sm">
+            <caption>Lista de estados</caption>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Estado</th>
+              <th>Activo</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _status of status; let i=index;">
+              <th scope="row">{{ _status._id }}</th>
+              <td>{{ _status.name }}</td>
+              <td>
+                <label class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" [checked]="_status.isActive" disabled="disabled">
+                  <span class="custom-control-indicator"></span>
+              </label>
+            </td>
+              <td>
+                <a [routerLink]="['./editor', _status._id]" title="Editar"><i class="mdi mdi-table-edit"></i></a>
+                <a href="javascript:void(0);" (click)="delete(_status._id, i)" title="Eliminar"><i class="mdi mdi-table-row-remove"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- end page title end breadcrumb -->

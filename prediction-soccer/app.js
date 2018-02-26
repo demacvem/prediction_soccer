@@ -27,12 +27,12 @@ app.use((req, res, next) => {
 });
 
 // Routes app
-app.use('/users', userRoutes);
-app.use('/status', statusRoutes);
-app.use('/leagues', leaguesRoutes);
-app.use('/teams', teamsRoutes);
-app.use('/tournaments', tournamentsRoutes);
-app.use('/dates', datesRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/status', statusRoutes);
+app.use('/api/leagues', leaguesRoutes);
+app.use('/api/teams', teamsRoutes);
+app.use('/api/tournaments', tournamentsRoutes);
+app.use('/api/dates', datesRoutes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
