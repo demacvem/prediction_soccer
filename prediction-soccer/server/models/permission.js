@@ -2,17 +2,18 @@
 
 const mongoose = require('mongoose');
 
-const dateSchema = new mongoose.Schema({
+const permissionSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
-    tournament: {
+    permissionType: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'tournaments',
+        ref: 'permissions_types',
         required: true
-    }
+    },
+    isActive: { type: Boolean, default: true }
 },
 {
     timestamps: true
 });
 
-module.exports = mongoose.model('dates', dateSchema);
+module.exports = mongoose.model('permissions', permissionSchema);

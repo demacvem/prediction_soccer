@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const dateSchema = new mongoose.Schema({
+const tournamentgroupSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
     tournament: {
@@ -15,4 +15,4 @@ const dateSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('dates', dateSchema);
+module.exports = mongoose.model('tournament_groups', tournamentgroupSchema);

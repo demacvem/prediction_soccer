@@ -1,17 +1,15 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const Tournament = require('../models/tournament');
-const _Date = require('../models/date');
-const TournamentGroup = require('../models/tournamentgroup');
+const Role = require('../models/role');
 
 exports.getAll = (req, res, next) => {
-    Tournament.find()
+    Role.find()
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                tournaments: results
+                roles: results
             });
         })
         .catch(err => {
@@ -22,48 +20,12 @@ exports.getAll = (req, res, next) => {
 }
 
 exports.getActives = (req, res, next) => {
-    Tournament.find({ isActive: true })
+    Role.find({ isActive: true })
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                tournaments: results
-            });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: `Ha ocurrido un error: ${err}`
-            });
-        });
-}
-
-exports.getDatesByTournament = (req, res, next) => {
-    let tournamentId = req.params.id;
-    _Date.find({ tournament: tournamentId })
-        .populate("tournament", "name")
-        .exec()
-        .then(results => {
-            res.status(200).json({
-                total: results.length,
-                dates: results
-            });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: `Ha ocurrido un error: ${err}`
-            });
-        });
-}
-
-exports.getTournamentGroupsByTournament = (req, res, next) => {
-    let tournamentId = req.params.id;
-    TournamentGroup.find({ tournament: tournamentId })
-        .populate("tournament", "name")
-        .exec()
-        .then(results => {
-            res.status(200).json({
-                total: results.length,
-                tournamentGroups: results
+                roles: results
             });
         })
         .catch(err => {
@@ -75,7 +37,7 @@ exports.getTournamentGroupsByTournament = (req, res, next) => {
 
 exports.getById = (req, res, next) => {
     let id = req.params.id;
-    Tournament
+    Role
         .findById(id)
         .exec()
         .then(result => {
@@ -84,7 +46,7 @@ exports.getById = (req, res, next) => {
             }
 
             res.status(200).json({
-                tournament: result
+                role: result
             });
         })
         .catch(err => {
@@ -95,27 +57,23 @@ exports.getById = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-    const tournament = new Tournament({
+    const role = new Role({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        logo: req.file.path,
-        order: req.body.order,
         isActive: req.body.isActive
     });
 
-    tournament.save()
+    role.save()
         .then(result => {
             res.status(201).json({
-                message: "Created tournament successfully",
-                createdLeagues: {
+                message: "Created role successfully",
+                createdRole: {
                     _id: result._id,
                     name: result.name,
-                    logo: result.logo,
-                    order: result.order,
                     isActive: result.isActive,
                     request: {
                         type: "GET",
-                        url: "http://localhost:3000/tournaments/" + result._id
+                        url: "http://localhost:3000/roles/" + result._id
                     }
                 }
             });
@@ -131,15 +89,12 @@ exports.update = (req, res, next) => {
     let id = req.params.id;
     let model = {
         name: req.body.name,
-        logo: req.file.path,
-        order: req.body.order,
-        isActive: req.body.isActive,
-        updatedAt: Date.now()
+        isActive: req.body.isActive
     };
-    Tournament.update({ _id: id }, model)
+    Role.update({ _id: id }, model)
         .then(result => {
             res.status(200).json({
-                message: "Updated tournaments successfully"
+                message: "Updated roles successfully"
             });
         })
         .catch(err => {
@@ -151,15 +106,15 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    Tournament.remove({ _id: id })
+    Role.remove({ _id: id })
       .exec()
       .then(result => {
         res.status(200).json({
-          message: "Tournament deleted",
+          message: "Role deleted",
           request: {
             type: "POST",
-            url: "http://localhost:3000/tournaments",
-            body: { name: "String", logoImage: "String", order: "Number", isActive: "Boolean" }
+            url: "http://localhost:3000/roles",
+            body: { name: "String", isActive: "Boolean" }
           }
         });
       })

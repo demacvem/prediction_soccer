@@ -1,17 +1,16 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const Tournament = require('../models/tournament');
-const _Date = require('../models/date');
-const TournamentGroup = require('../models/tournamentgroup');
+const Permission = require('../models/permission');
 
 exports.getAll = (req, res, next) => {
-    Tournament.find()
+    Permission.find()
+        .populate("permissionType", "name")
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                tournaments: results
+                permissions: results
             });
         })
         .catch(err => {
@@ -22,48 +21,13 @@ exports.getAll = (req, res, next) => {
 }
 
 exports.getActives = (req, res, next) => {
-    Tournament.find({ isActive: true })
+    Permission.find({ isActive: true })
+        .populate("permissionType", "name")
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                tournaments: results
-            });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: `Ha ocurrido un error: ${err}`
-            });
-        });
-}
-
-exports.getDatesByTournament = (req, res, next) => {
-    let tournamentId = req.params.id;
-    _Date.find({ tournament: tournamentId })
-        .populate("tournament", "name")
-        .exec()
-        .then(results => {
-            res.status(200).json({
-                total: results.length,
-                dates: results
-            });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: `Ha ocurrido un error: ${err}`
-            });
-        });
-}
-
-exports.getTournamentGroupsByTournament = (req, res, next) => {
-    let tournamentId = req.params.id;
-    TournamentGroup.find({ tournament: tournamentId })
-        .populate("tournament", "name")
-        .exec()
-        .then(results => {
-            res.status(200).json({
-                total: results.length,
-                tournamentGroups: results
+                permissions: results
             });
         })
         .catch(err => {
@@ -75,8 +39,9 @@ exports.getTournamentGroupsByTournament = (req, res, next) => {
 
 exports.getById = (req, res, next) => {
     let id = req.params.id;
-    Tournament
+    Permission
         .findById(id)
+        .populate("permissionType", "name")
         .exec()
         .then(result => {
             if(!result){
@@ -84,7 +49,7 @@ exports.getById = (req, res, next) => {
             }
 
             res.status(200).json({
-                tournament: result
+                permission: result
             });
         })
         .catch(err => {
@@ -95,27 +60,25 @@ exports.getById = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-    const tournament = new Tournament({
+    const permission = new Permission({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        logo: req.file.path,
-        order: req.body.order,
+        permissionType: req.body.permissionType,
         isActive: req.body.isActive
     });
 
-    tournament.save()
+    permission.save()
         .then(result => {
             res.status(201).json({
-                message: "Created tournament successfully",
-                createdLeagues: {
+                message: "Created permission successfully",
+                createdRole: {
                     _id: result._id,
                     name: result.name,
-                    logo: result.logo,
-                    order: result.order,
+                    permissionType: result.permissionType,
                     isActive: result.isActive,
                     request: {
                         type: "GET",
-                        url: "http://localhost:3000/tournaments/" + result._id
+                        url: "http://localhost:3000/permissions/" + result._id
                     }
                 }
             });
@@ -131,15 +94,13 @@ exports.update = (req, res, next) => {
     let id = req.params.id;
     let model = {
         name: req.body.name,
-        logo: req.file.path,
-        order: req.body.order,
-        isActive: req.body.isActive,
-        updatedAt: Date.now()
+        permissionType: req.body.permissionType,
+        isActive: req.body.isActive
     };
-    Tournament.update({ _id: id }, model)
+    Permission.update({ _id: id }, model)
         .then(result => {
             res.status(200).json({
-                message: "Updated tournaments successfully"
+                message: "Updated permission successfully"
             });
         })
         .catch(err => {
@@ -151,15 +112,15 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    Tournament.remove({ _id: id })
+    Permission.remove({ _id: id })
       .exec()
       .then(result => {
         res.status(200).json({
-          message: "Tournament deleted",
+          message: "Permission deleted",
           request: {
             type: "POST",
-            url: "http://localhost:3000/tournaments",
-            body: { name: "String", logoImage: "String", order: "Number", isActive: "Boolean" }
+            url: "http://localhost:3000/permissions",
+            body: { name: "String", permissionType: "String", isActive: "Boolean" }
           }
         });
       })

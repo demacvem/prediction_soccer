@@ -10,6 +10,9 @@ const tournamentSchema = new mongoose.Schema({
     isActive: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: Date,
+},
+{
+    timestamps: true
 });
 
 module.exports = mongoose.model('tournaments', tournamentSchema);

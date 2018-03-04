@@ -12,6 +12,9 @@ const teamSchema = new mongoose.Schema({
         ref: 'leagues',
         required: true
     }
+},
+{
+    timestamps: true
 });
 
 module.exports = mongoose.model('teams', teamSchema);

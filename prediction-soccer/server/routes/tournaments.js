@@ -36,6 +36,7 @@ routes.get('/', tournamantsController.getAll);
 routes.get('/actives', tournamantsController.getActives);
 routes.get('/:id', tournamantsController.getById);
 routes.get('/:id/dates', tournamantsController.getDatesByTournament);
+routes.get('/:id/groups', tournamantsController.getTournamentGroupsByTournament);
 routes.post('/', upload.single('logoImage'), tournamantsController.create);
 routes.put('/:id', upload.single('logoImage'), tournamantsController.update);
 routes.delete('/:id', tournamantsController.delete);

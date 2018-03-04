@@ -2,13 +2,13 @@
 
 const mongoose = require('mongoose');
 
-const statusSchema = new mongoose.Schema({
+const roleSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
-    isActive: Boolean
+    isActive: { type: Boolean, default: true }
 },
 {
     timestamps: true
 });
 
-module.exports = mongoose.model('status', statusSchema);
+module.exports = mongoose.model('roles', roleSchema);

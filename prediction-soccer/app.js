@@ -12,6 +12,12 @@ const leaguesRoutes = require('./server/routes/leagues');
 const teamsRoutes = require('./server/routes/teams');
 const tournamentsRoutes = require('./server/routes/tournaments');
 const datesRoutes = require('./server/routes/dates');
+const rolesRoutes = require('./server/routes/roles');
+const permissionsTypeRoutes = require('./server/routes/permissionstype');
+const permissionsRoutes = require('./server/routes/permissions');
+const tournamentgroupsRoutes = require('./server/routes/tournamentgroups');
+const tournamentTeamsRoutes = require('./server/routes/tournamentteams');
+const matchesRoutes = require('./server/routes/matches');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -32,7 +38,13 @@ app.use('/api/status', statusRoutes);
 app.use('/api/leagues', leaguesRoutes);
 app.use('/api/teams', teamsRoutes);
 app.use('/api/tournaments', tournamentsRoutes);
+app.use('/api/tournamentgroups', tournamentgroupsRoutes);
 app.use('/api/dates', datesRoutes);
+app.use('/api/roles', rolesRoutes);
+app.use('/api/permissionstype', permissionsTypeRoutes);
+app.use('/api/permissions', permissionsRoutes);
+app.use('/api/tournamentteams', tournamentTeamsRoutes);
+app.use('/api/matches', matchesRoutes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
