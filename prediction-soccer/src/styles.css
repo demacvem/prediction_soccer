@@ -3,6 +3,10 @@
     margin-bottom: 10px;
 }
 
+.space-top {
+    margin-top: 7px;
+}
+
 .upper-case{
     text-transform: uppercase;
 }

@@ -9,17 +9,17 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
-import { LoginComponent } from './login/login.component';
-import { StatusComponent } from './status/status/status.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { LoginComponent } from './components/login/login.component';
+import { StatusComponent } from './components/status/status/status.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { AlertNotificationComponent } from './shared/alert-notification/alert-notification.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
 
 // Services
 import { CustomHttpService } from './services/custom-http.service';
 import { AlertNotificationService } from './services/alert-notification.service';
-import { StatusFormComponent } from './status/status-form/status-form.component';
+import { StatusFormComponent } from './components/status/status-form/status-form.component';
 
 @NgModule({
   declarations: [

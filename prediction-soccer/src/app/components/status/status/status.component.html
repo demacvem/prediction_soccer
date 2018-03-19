@@ -1,0 +1,50 @@
+<div class="row space-bottom">
+  <div class="col-md-3">
+    <a class="btn btn-primary btn-sm" [routerLink]="['./editor']">Crear Nuevo</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <aside class="panel-box">
+      <div class="titles no-margin">
+        <h4>Estados</h4>
+      </div>
+      <div class="info-panel">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Estado</th>
+                <th class="text-center">Activo</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _status of status; let i=index;">
+                <td scope="row">{{ _status._id }}</td>
+                <td>{{ _status.name }}</td>
+                <td class="text-center">
+                  <i class="fa fa-check-square" [style.color]="_status.isActive ? '#007bff': ''"></i>
+                </td>
+                <td class="text-center">
+                  <a [routerLink]="['./editor', _status._id]" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="javascript:void(0);" (click)="delete(_status._id, i)" title="Eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+
+
+<!-- end page title end breadcrumb -->
