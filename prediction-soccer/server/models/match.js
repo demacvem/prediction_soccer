@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 
 const matchSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    date: {
+    journey: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'dates',
+        ref: 'journeys',
         required: true
     },
     _date: { type: Date, required: true },
@@ -23,16 +23,12 @@ const matchSchema = new mongoose.Schema({
     },
     localGoals: { type: Number, default: 0 },
     visitorGoals: { type: Number, default: 0 },
-    tournamentgroup: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'tournament_groups',
-        required: true
-    },
     status: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'status',
         required: true
-    }
+    },
+    deleted: { type: Boolean, default: false}
 },
 {
     timestamps: true

@@ -2,10 +2,13 @@
 
 const mongoose = require('mongoose');
 
-const leagueSchema = new mongoose.Schema({
+const menuSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
-    logo: { type: String, required: true },
+    code: { type: String, required: true },
+    url: String,
+    icon: String ,
+    padre: { type: Number, required: true },
     isActive: Boolean,
     deleted: { type: Boolean, default: false}
 },
@@ -13,4 +16,4 @@ const leagueSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('leagues', leagueSchema);
+module.exports = mongoose.model('menus', menuSchema);

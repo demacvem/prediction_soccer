@@ -2,11 +2,11 @@
 
 const mongoose = require('mongoose');
 
-const tournamentteamSchema = new mongoose.Schema({
+const ratingSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    tournamentgroup: {
+    tournament: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'tournament_groups',
+        ref: 'tournaments',
         required: true
     },
     team: {
@@ -27,4 +27,4 @@ const tournamentteamSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('tournament_teams', tournamentteamSchema);
+module.exports = mongoose.model('ratings', ratingSchema);

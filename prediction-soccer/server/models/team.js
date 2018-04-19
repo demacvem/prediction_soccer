@@ -11,7 +11,9 @@ const teamSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'leagues',
         required: true
-    }
+    },
+    isActive: { type: Boolean, default: true },
+    deleted: { type: Boolean, default: false}
 },
 {
     timestamps: true

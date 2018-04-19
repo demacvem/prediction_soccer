@@ -7,9 +7,13 @@ const tournamentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     logo: { type: String , required: true },
     order: { type: Number , required: true },
+    country: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'countries',
+        required: true
+    },
     isActive: { type: Boolean, default: true },
-    createdAt: { type: Date, default: Date.now() },
-    updatedAt: Date,
+    deleted: { type: Boolean, default: false },
 },
 {
     timestamps: true

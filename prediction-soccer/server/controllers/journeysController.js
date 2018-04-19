@@ -1,16 +1,16 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const _Date = require('../models/date');
+const Journey = require('../models/journey');
 
 exports.getAll = (req, res, next) => {
-    _Date.find()
+    Journey.find()
         .populate("tournament" ,"name")
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                dates: results
+                journeys: results
             });
         })
         .catch(err => {
@@ -22,7 +22,7 @@ exports.getAll = (req, res, next) => {
 
 exports.getById = (req, res, next) => {
     let id = req.params.id;
-    _Date
+    Journey
         .findById(id)
         .populate("tournament" ,"name")
         .exec()
@@ -32,7 +32,7 @@ exports.getById = (req, res, next) => {
             }
 
             res.status(200).json({
-                date: result
+                journey: result
             });
         })
         .catch(err => {
@@ -43,23 +43,25 @@ exports.getById = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-    const date = new _Date({
+    const date = new Journey({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        tournament: req.body.tournament
+        date: req.body.date,
+        journey: req.body.tournament
     });
 
     date.save()
         .then(result => {
             res.status(201).json({
-                message: "Created dates successfully",
-                createdLeagues: {
+                message: "Created journey successfully",
+                createdJourney: {
                     _id: result._id,
                     name: result.name,
                     tournament: result.tournament,
+                    date: result.date,
                     request: {
                         type: "GET",
-                        url: "http://localhost:3000/dates/" + result._id
+                        url: "http://localhost:3000/journeys/" + result._id
                     }
                 }
             });
@@ -75,12 +77,13 @@ exports.update = (req, res, next) => {
     let id = req.params.id;
     let model = {
         name: req.body.name,
-        tournament: req.body.tournament
+        tournament: req.body.tournament,
+        date: req.body.date
     };
-    _Date.update({ _id: id }, model)
+    Journey.update({ _id: id }, model)
         .then(result => {
             res.status(200).json({
-                message: "Updated dates successfully"
+                message: "Updated journey successfully"
             });
         })
         .catch(err => {
@@ -92,15 +95,15 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    _Date.remove({ _id: id })
+    Journey.remove({ _id: id })
       .exec()
       .then(result => {
         res.status(200).json({
-          message: "Date deleted",
+          message: "Journey deleted",
           request: {
             type: "POST",
-            url: "http://localhost:3000/tournaments",
-            body: { name: "String", logoImage: "String", order: "Number", isActive: "Boolean" }
+            url: "http://localhost:3000/journeys",
+            body: { name: "String", tournament: "String", date: "Date" }
           }
         });
       })

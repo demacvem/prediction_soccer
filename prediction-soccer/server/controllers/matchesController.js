@@ -5,10 +5,9 @@ const Match = require('../models/match');
 
 exports.getAll = (req, res, next) => {
     Match.find()
-        .populate("Date", "name")
+        .populate("journey", "name")
         .populate("localTeam", "name")
         .populate("visitorTeam", "name")
-        .populate("tournamentgroup", "name")
         .populate("status", "name")
         .exec()
         .then(results => {
@@ -26,12 +25,11 @@ exports.getAll = (req, res, next) => {
 
 exports.getById = (req, res, next) => {
     let id = req.params.id;
-    TournamentTeam
+    Match
         .findById(id)
-        .populate("Date", "name")
+        .populate("journey", "name")
         .populate("localTeam", "name")
         .populate("visitorTeam", "name")
-        .populate("tournamentgroup", "name")
         .populate("status", "name")
         .exec()
         .then(result => {
@@ -53,29 +51,27 @@ exports.getById = (req, res, next) => {
 exports.create = (req, res, next) => {
     const match = new Match({
         _id: new mongoose.Types.ObjectId(),
-        date: req.body.date,
+        journey: req.body.journey,
         _date: req.body._date,
         _time: req.body._time,
         localTeam: req.body.localTeam,
         visitorTeam: req.body.visitorTeam,
-        tournamentgroup: req.body.visitorTeam,
         status: req.body.status,
     });
 
     match.save()
         .then(result => {
             res.status(201).json({
-                message: "Created tournamentTeam successfully",
+                message: "Created matches successfully",
                 createdLeagues: {
                     _id: result._id,
-                    date: result.date,
+                    journey: result.journey,
                     _date: result._date,
                     _time: result._time,
                     localTeam: result.localTeam,
                     visitorTeam: result.visitorTeam,
                     localGoals: result.localGoals,
                     visitorGoals: result.visitorGoals,
-                    tournamentgroup: result.tournamentgroup,
                     status: result.status,
                     request: {
                         type: "GET",
@@ -95,14 +91,13 @@ exports.update = (req, res, next) => {
     let id = req.params.id;
 
     let model = {
-        date: req.body.date,
+        journey: req.body.journey,
         _date: req.body._date,
         _time: req.body._time,
         localTeam: req.body.localTeam,
         visitorTeam: req.body.visitorTeam,
         localGoals: req.body.localGoals,
         visitorGoals: req.body.visitorGoals,
-        tournamentgroup: req.body.tournamentgroup,
         status: req.body.status,
     };
 
@@ -130,12 +125,11 @@ exports.delete = (req, res, next) => {
                     type: "POST",
                     url: "http://localhost:3000/matches",
                     body: { 
-                        date: "String", 
+                        journey: "String", 
                         _date: "Date",
                         _time: "String",
                         localTeam: "String",
                         visitorTeam: "String",
-                        tournamentgroup: "String",
                         status: "String"
                     }
                 }

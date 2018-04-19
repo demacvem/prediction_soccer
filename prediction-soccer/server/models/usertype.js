@@ -2,14 +2,14 @@
 
 const mongoose = require('mongoose');
 
-const roleSchema = new mongoose.Schema({
+const userTypeTournamentTeamSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
     isActive: { type: Boolean, default: true },
-    deleted: { type: Boolean, default: false }
+    isDeleted: { type: Boolean, default: false }
 },
 {
     timestamps: true
 });
 
-module.exports = mongoose.model('roles', roleSchema);
+module.exports = mongoose.model('users_types', userTypeTournamentTeamSchema);

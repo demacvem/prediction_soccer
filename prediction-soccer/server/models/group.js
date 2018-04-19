@@ -2,15 +2,14 @@
 
 const mongoose = require('mongoose');
 
-const leagueSchema = new mongoose.Schema({
+const groupSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
-    logo: { type: String, required: true },
-    isActive: Boolean,
+    isActive: { type: Boolean, default: true },
     deleted: { type: Boolean, default: false}
 },
 {
     timestamps: true
 });
 
-module.exports = mongoose.model('leagues', leagueSchema);
+module.exports = mongoose.model('groups', groupSchema);

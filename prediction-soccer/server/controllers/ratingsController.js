@@ -1,17 +1,17 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const TournamentTeam = require('../models/tournamentteam');
+const Rating = require('../models/rating');
 
 exports.getAll = (req, res, next) => {
-    TournamentTeam.find()
-        .populate("tournamentgroup", "name")
+    Rating.find()
+        .populate("tournament", "name")
         .populate("team", "name")
         .exec()
         .then(results => {
             res.status(200).json({
                 total: results.length,
-                tournamentTeams: results
+                ratings: results
             });
         })
         .catch(err => {
@@ -23,9 +23,9 @@ exports.getAll = (req, res, next) => {
 
 exports.getById = (req, res, next) => {
     let id = req.params.id;
-    TournamentTeam
+    Rating
         .findById(id)
-        .populate("tournamentgroup", "name")
+        .populate("tournament", "name")
         .populate("team", "name")
         .exec()
         .then(result => {
@@ -34,7 +34,7 @@ exports.getById = (req, res, next) => {
             }
 
             res.status(200).json({
-                tournamentTeam: result
+                rating: result
             });
         })
         .catch(err => {
@@ -45,19 +45,19 @@ exports.getById = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-    const tournamentTeam = new TournamentTeam({
+    const rating = new Rating({
         _id: new mongoose.Types.ObjectId(),
-        tournamentgroup: req.body.tournamentgroup,
+        tournament: req.body.tournament,
         team: req.body.team
     });
 
-    tournamentTeam.save()
+    rating.save()
         .then(result => {
             res.status(201).json({
-                message: "Created tournamentTeam successfully",
+                message: "Created rating successfully",
                 createdLeagues: {
                     _id: result._id,
-                    tournamentgroup: result.tournamentgroup,
+                    tournament: result.tournament,
                     team: result.team,
                     matchesPlayed: result.matchesPlayed,
                     matchesWon: result.matchesWon,
@@ -69,7 +69,7 @@ exports.create = (req, res, next) => {
                     position: result.position,
                     request: {
                         type: "GET",
-                        url: "http://localhost:3000/tournamentteams/" + result._id
+                        url: "http://localhost:3000/ratings/" + result._id
                     }
                 }
             });
@@ -85,7 +85,7 @@ exports.update = (req, res, next) => {
     let id = req.params.id;
 
     let model = {
-        tournamentgroup: req.body.tournamentgroup,
+        tournament: req.body.tournament,
         team: req.body.team,
         matchesPlayed: req.body.matchesPlayed,
         matchesWon: req.body.matchesWon,
@@ -97,10 +97,10 @@ exports.update = (req, res, next) => {
         position: req.body.position
     };
 
-    TournamentTeam.update({ _id: id }, model)
+    Rating.update({ _id: id }, model)
         .then(result => {
             res.status(200).json({
-                message: "Updated tournamentteam successfully"
+                message: "Updated rating successfully"
             });
         })
         .catch(err => {
@@ -112,15 +112,15 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    TournamentTeam.remove({ _id: id })
+    Rating.remove({ _id: id })
         .exec()
         .then(result => {
             res.status(200).json({
-                message: "TournamentTeam deleted",
+                message: "Rsting deleted",
                 request: {
                     type: "POST",
-                    url: "http://localhost:3000/tournamentteams",
-                    body: { tournamentgroup: "String", team: "String" }
+                    url: "http://localhost:3000/ratings",
+                    body: { tournament: "String", team: "String" }
                 }
             });
         })
